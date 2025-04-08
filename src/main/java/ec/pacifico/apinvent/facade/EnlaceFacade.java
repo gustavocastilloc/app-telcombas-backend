@@ -1260,5 +1260,93 @@ public class EnlaceFacade {
             }
         }
     }
+    public JSONObject dashboardATMINT() {
+        JSONObject obj = new JSONObject();
+        PreparedStatement st = null;
+        ResultSet rs = null;
 
+        try {
+            String[] queries = {
+                "SELECT COUNT(Enlace.id) AS total FROM Enlace FULL OUTER JOIN Agencia ON Agencia.id = Enlace.idagencia FULL OUTER JOIN Tipo ON Tipo.id = Agencia.idtipo WHERE Enlace.estado != 0 AND (Tipo.nombre LIKE '%ATM' OR Tipo.nombre LIKE '%INT%')",
+                "SELECT COUNT(Enlace.id) AS total FROM Enlace FULL OUTER JOIN Agencia ON Agencia.id = Enlace.idagencia FULL OUTER JOIN Tipo ON Tipo.id = Agencia.idtipo WHERE Enlace.estado != 0 AND Agencia.nombre LIKE '%ackup%' AND Tipo.nombre LIKE '%ATM%'",
+                "SELECT COUNT(Enlace.id) AS total FROM Enlace FULL OUTER JOIN Agencia ON Agencia.id = Enlace.idagencia FULL OUTER JOIN Tipo ON Tipo.id = Agencia.idtipo WHERE Enlace.estado != 0 AND Agencia.nombre NOT LIKE '%ackup%' AND Tipo.nombre LIKE '%ATM%'",
+                "SELECT COUNT(Enlace.id) AS total FROM Enlace FULL OUTER JOIN Agencia ON Agencia.id = Enlace.idagencia FULL OUTER JOIN Tipo ON Tipo.id = Agencia.idtipo WHERE Enlace.estado != 0 AND Tipo.nombre LIKE '%INT%'"
+            };
+
+            String[] keys = {"ATMINT", "ATMBACKUP", "ATM", "INT"};
+
+            for (int i = 0; i < queries.length; i++) {
+                st = con.getConnection().prepareStatement(queries[i]);
+                rs = st.executeQuery();
+                if (rs.next()) {
+                    obj.put(keys[i], rs.getInt("total"));
+                }
+                rs.close();
+                st.close();
+            }
+
+            return obj;
+
+        } catch (Exception e) {
+            System.out.println(this.getClass().toString() + ".dashboardATMINT " + e.getMessage());
+            return null;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (st != null) st.close();
+            } catch (Exception e) {
+                System.out.println(this.getClass().toString() + ".dashboardATMINT (closing) " + e.getMessage());
+            }
+        }
+    }
+    public JSONObject dashboardCantEnlaceProveedor() {
+        JSONObject obj = new JSONObject();
+        JSONParser parser = new JSONParser();
+
+        // Consulta SQL
+        String query = "SELECT Propietario.nombre, " +
+                       "(SELECT COUNT(Enlace.id) " +
+                       " FROM Enlace " +
+                       " WHERE Enlace.idproveedor = Propietario.id " +
+                       "   AND Enlace.estado != 0) AS CANTENLACES " +
+                       "FROM dbo.Propietario " +
+                       "WHERE (SELECT COUNT(Enlace.id) " +
+                       "       FROM Enlace " +
+                       "       WHERE Enlace.idproveedor = Propietario.id " +
+                       "         AND Enlace.estado != 0) > 0"+
+                        "ORDER BY CANTENLACES ASC;" ;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+
+        try {
+            st = con.getConnection().prepareStatement(query);
+            rs = st.executeQuery();
+
+            // Convertir resultados en JSON
+            JSONArray resultArray = new JSONArray();
+
+            while (rs.next()) {
+                JSONObject item = new JSONObject();
+                item.put("nombre", rs.getString("nombre"));
+                item.put("cantenlaces", rs.getInt("cantenlaces"));
+                resultArray.add(item);
+            }
+
+            // Si hay resultados, asignamos el resultado al objeto JSON
+            obj.put("proveedores", resultArray);
+            return obj;
+
+        } catch (Exception e) {
+            System.out.println(this.getClass().toString() + ".dashboardCantEnlaceProveedor " + e.getMessage());
+            obj.put("error", "Error en la consulta");
+            return obj;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (st != null) st.close();
+            } catch (Exception e) {
+                System.out.println(this.getClass().toString() + ".dashboardCantEnlaceProveedor (closing) " + e.getMessage());
+            }
+        }
+    }
 }

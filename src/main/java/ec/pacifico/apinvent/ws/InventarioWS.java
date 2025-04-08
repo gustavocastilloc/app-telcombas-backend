@@ -7,6 +7,7 @@ package ec.pacifico.apinvent.ws;
 
 import ec.pacifico.apinvent.entity.Inventario;
 import ec.pacifico.apinvent.facade.Conexion;
+import ec.pacifico.apinvent.facade.EnlaceFacade;
 import ec.pacifico.apinvent.facade.InventarioFacade;
 import ec.pacifico.apinvent.facade.UsuarioFacade;
 import java.io.File;
@@ -791,7 +792,8 @@ public class InventarioWS {
             resp.put("tbodega", 0);
             resp.put("tbfecha", 0);
             resp.put("tbfechaprox", 0);
-
+            resp.put("atmint",0);
+            resp.put("totalenlacesprov", 0);
             return Response.status(Response.Status.BAD_REQUEST).entity(resp.toString()).
                     build();
         }
@@ -808,11 +810,13 @@ public class InventarioWS {
         JSONObject tbodega = null;
         JSONObject tbfecha = null;
         JSONObject tbfechaprox = null;
-
+        JSONObject atmint = null;
+        JSONObject totalenlacesprov = null;
         Conexion con = null;
         try {
             con = new Conexion();
             InventarioFacade consultaFacade = new InventarioFacade(con);
+            EnlaceFacade consultaEnlaceFac = new EnlaceFacade(con);
             total = consultaFacade.dashboardTotal();
             tfecha = consultaFacade.dashboardTotalFecha();
             tfechaprox = consultaFacade.dashboardTotalFechaProximo();
@@ -825,6 +829,8 @@ public class InventarioWS {
             tbodega = consultaFacade.dashboardBodega();
             tbfecha = consultaFacade.dashboardBodegaFecha();
             tbfechaprox = consultaFacade.dashboardBodegaFechaProximo();
+            atmint = consultaEnlaceFac.dashboardATMINT();
+            totalenlacesprov = consultaEnlaceFac.dashboardCantEnlaceProveedor();
             con.closeConnection();
         } catch (Exception e) {
             System.out.println(this.getClass().toString() + " " + e.getMessage());
@@ -845,6 +851,8 @@ public class InventarioWS {
         resp.put("tbodega", tbodega);
         resp.put("tbfecha", tbfecha);
         resp.put("tbfechaprox", tbfechaprox);
+        resp.put("atmint", atmint);
+        resp.put("totalenlacesprov", totalenlacesprov);
         return Response.status(Response.Status.OK).entity(resp.toString()).
                 build();
     }

@@ -529,8 +529,7 @@ public class ActividadesWS {
             for (Actividades act : dato.getSubactividades()) {
                 if (act.getFecha() != null) {
                     if (consultaFacade.existeEvento(act)) {
-                        resp.put("log", "E"
-                                + "ado");
+                        resp.put("log", "Existe una actividad ya ingresado");
                         return Response.status(Response.Status.BAD_REQUEST).entity(resp.toString()).
                                 build();
                     }
