@@ -15,8 +15,8 @@ import java.util.TimeZone;
  */
 public class Conexion {
     private Connection connection;
-    private String servidor = "jdbc:sqlserver://localhost:1433;databaseName=apinven;integratedSecurity=true";  //BD SERVIDOR BDP
-    //private String servidor = "jdbc:sqlserver://127.0.0.1;encrypt=false;trustServerCertificate=true;databaseName=apinven;user=gustavoc;password=Tetian02";  //BD LOCAL 
+    //private String servidor = "jdbc:sqlserver://localhost:1433;databaseName=apinven;integratedSecurity=true";  //BD SERVIDOR BDP
+    private String servidor = "jdbc:sqlserver://127.0.0.1;encrypt=false;trustServerCertificate=true;databaseName=apinven;user=gustavoc;password=Tetian03";  //BD LOCAL 
     public Conexion() {
         this.createConnection();
     }

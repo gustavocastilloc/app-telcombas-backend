@@ -6,6 +6,7 @@ ec\pacifico\apinvent\facade\EntidadesFacade.class
 ec\pacifico\apinvent\ws\EntidadesWS.class
 ec\pacifico\apinvent\facade\AgenciaFacade.class
 ec\pacifico\apinvent\entity\Perfil.class
+ec\pacifico\apinvent\excelprocessor\IncidenteEnlace.class
 ec\pacifico\apinvent\ws\OrionWS.class
 ec\pacifico\apinvent\ws\EnlaceWS.class
 ec\pacifico\apinvent\util\Util.class
@@ -32,6 +33,7 @@ ec\pacifico\apinvent\entity\Inventario.class
 ec\pacifico\apinvent\ws\ConfigActividadWS.class
 ec\pacifico\apinvent\entity\TTHeader.class
 ec\pacifico\apinvent\facade\PropietarioFacade.class
+ec\pacifico\apinvent\excelprocessor\IncidenteEnlace$1.class
 ec\pacifico\apinvent\ws\ActividadesWS.class
 ec\pacifico\apinvent\facade\AmbienteFacade.class
 ec\pacifico\apinvent\facade\ModeloFacade.class
